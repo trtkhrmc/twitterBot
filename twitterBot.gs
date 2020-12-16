@@ -1,6 +1,6 @@
 var ALL = '*';
 var LIMIT_MATCHES = {'minute': '[0-5]?[0-9]', 'hour': '[01]?[0-9]|2[0-3]', 'day': '0?[1-9]|[1-2][0-9]|3[01]', 'month': '0?[1-9]|1[0-2]', 'week': '[0-6]'};
-var MAX_NUMBERS   = {'minute': 59, 'hour': 23, 'day': 31, 'month': 12, 'week': 6}; // –{•¨‚Ìcron‚Í—j“ú‚Ì7‚ğ“ú—j‚Æ”»’è‚·‚é‚ªAèŠÔ‚È‚Ì‚Åmax6‚Æ‚·‚é
+var MAX_NUMBERS   = {'minute': 59, 'hour': 23, 'day': 31, 'month': 12, 'week': 6}; // æœ¬ç‰©ã®cronã¯æ›œæ—¥ã®7ã‚’æ—¥æ›œã¨åˆ¤å®šã™ã‚‹ãŒã€æ‰‹é–“ãªã®ã§max6ã¨ã™ã‚‹
 var COLUMNS       = ['minute', 'hour', 'day', 'month', 'week'];
 
 const TITTLE_ROW = 4;
@@ -15,7 +15,7 @@ const LAST_REQ_DATE = 12;
 const LAST_FEEDBACK_DATA = 13;
 const TWITTER_ACCESS_TOKEN = 15;
 const TWITTER_ACCESS_TOKEN_SECRET = 16;
-const TWITTER_EMAIL_COL = 17; //CronList‚ÌÅŒã
+const TWITTER_EMAIL_COL = 17; //CronListã®æœ€å¾Œ
 const TWITTER_PASS_COL = 18; 
 const ABS_2_CRON_LIST = -3;
 
@@ -30,12 +30,12 @@ function myFunction() {
     'month':  Utilities.formatDate(currentTime, 'Asia/Tokyo', 'M'),
     'week':   Utilities.formatDate(currentTime, 'Asia/Tokyo', 'u')
   };
-  for (var i = 1; i < cronList.length; i++) { // ƒXƒvƒŒƒbƒhƒV[ƒg‚©‚çæ“¾‚µ‚½ˆês–Ú(key:0)‚Íƒ‰ƒxƒ‹‚È‚Ì‚ÅAkey1‚©‚çÀs
+  for (var i = 1; i < cronList.length; i++) { // ã‚¹ãƒ—ãƒ¬ãƒƒãƒ‰ã‚·ãƒ¼ãƒˆã‹ã‚‰å–å¾—ã—ãŸä¸€è¡Œç›®(key:0)ã¯ãƒ©ãƒ™ãƒ«ãªã®ã§ã€key1ã‹ã‚‰å®Ÿè¡Œ
     executeIfNeeded(cronList[i], times, sheet, i + TITTLE_ROW);
   }
 }
 
-// ƒV[ƒg‚©‚çCron‚Ìˆê——‚ğæ“¾‚µ”z—ñ‚Å•Ô‚·
+// ã‚·ãƒ¼ãƒˆã‹ã‚‰Cronã®ä¸€è¦§ã‚’å–å¾—ã—é…åˆ—ã§è¿”ã™
 function getCronList(sheet) {
   //var columnCVals = sheet.getRange('C4:C200').getValues();
   //var lastRow = columnCVals.filter(String).length;
@@ -43,38 +43,38 @@ function getCronList(sheet) {
   return sheet.getRange(TITTLE_ROW, TWITTER_ID_COL, lastRow , TWITTER_EMAIL_COL).getValues(); 
 }
 
-// Às‚·‚×‚«ƒ^ƒCƒ~ƒ“ƒO‚©”»’è‚µA•K—v‚Å‚ ‚ê‚ÎÀs
+// å®Ÿè¡Œã™ã¹ãã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‹åˆ¤å®šã—ã€å¿…è¦ã§ã‚ã‚Œã°å®Ÿè¡Œ
 function executeIfNeeded(cron, times, sheet, row) {
-  for( var i=0; i<COLUMNS.length; i++ ){   // minute, hour, day, month, week‚ğ‡”Ô‚Éƒ`ƒFƒbƒN‚µ‚Ä‘S‚ÄğŒ‚Éƒ}ƒbƒ`‚·‚é‚æ‚¤‚È‚çcronÀs
+  for( var i=0; i<COLUMNS.length; i++ ){   // minute, hour, day, month, weekã‚’é †ç•ªã«ãƒã‚§ãƒƒã‚¯ã—ã¦å…¨ã¦æ¡ä»¶ã«ãƒãƒƒãƒã™ã‚‹ã‚ˆã†ãªã‚‰cronå®Ÿè¡Œ
     var timeType = COLUMNS[i];
     
-    var timingList = getTimingList(cron[i + 1], timeType); //æ“ª‚ÍtwitterƒAƒJƒEƒ“ƒg–¼‚Ì‚½‚ß+1
+    var timingList = getTimingList(cron[i + 1], timeType); //å…ˆé ­ã¯twitterã‚¢ã‚«ã‚¦ãƒ³ãƒˆåã®ãŸã‚+1
     if (!isMatch(timingList, times[timeType])) {
       return false;
     } 
   }
   
-  if (!(sheet.getRange(row, TWITTER_ACCESS_TOKEN).isBlank() )){ //token ‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡
-    if((new Date() - sheet.getRange(row, LAST_REQ_DATE).getValue())/1000/60 > 15){@//‘O‰ñˆ—‚©‚ç15•ªˆÈãŒo‰ß‚µ‚Ä‚¢‚È‚¢ê‡‚Íˆ—‚µ‚È‚¢(Às‚É—h‚ç‚¬‚ğ—^‚¦‚Ä‚¢‚é‚½‚ß)
+  if (!(sheet.getRange(row, TWITTER_ACCESS_TOKEN).isBlank() )){ //token ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆ
+    if((new Date() - sheet.getRange(row, LAST_REQ_DATE).getValue())/1000/60 > 15){ã€€//å‰å›å‡¦ç†æ™‚ã‹ã‚‰15åˆ†ä»¥ä¸ŠçµŒéã—ã¦ã„ãªã„å ´åˆã¯å‡¦ç†ã—ãªã„(å®Ÿè¡Œã«æºã‚‰ãã‚’ä¸ãˆã¦ã„ã‚‹ãŸã‚)
       cronStClrFlg = postTweet(cron[TWITTER_ID_COL + ABS_2_CRON_LIST ],
                                     cron[TWITTER_ACCESS_TOKEN + ABS_2_CRON_LIST ],
                                     cron[TWITTER_ACCESS_TOKEN_SECRET + ABS_2_CRON_LIST],
                                     cron[RANDOM_REPEAT + ABS_2_CRON_LIST]
-                                   ); //ƒcƒC[ƒgÀs
+                                   ); //ãƒ„ã‚¤ãƒ¼ãƒˆå®Ÿè¡Œ
       
       
-      if (cronStClrFlg){               //‡˜“ŠeƒŠƒs[ƒg‚È‚µ‚ÅƒŠƒXƒgI’[‚Ü‚Å‚¢‚Á‚½ê‡‚ÍcronStClrFlg‚©‚ç‚ÌƒZƒbƒeƒBƒ“ƒOî•ñ‚ğƒNƒŠƒA‚·‚é
+      if (cronStClrFlg){               //é †åºæŠ•ç¨¿ãƒªãƒ”ãƒ¼ãƒˆãªã—ã§ãƒªã‚¹ãƒˆçµ‚ç«¯ã¾ã§ã„ã£ãŸå ´åˆã¯cronStClrFlgã‹ã‚‰æ™‚åˆ»ã®ã‚»ãƒƒãƒ†ã‚£ãƒ³ã‚°æƒ…å ±ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
         sheet.getRange(row, CRON_MIN, 1 , CRON_DAY_OF_WEEK - CRON_MIN + 1).clearContent();
       }else{
-        sheet.getRange(row, LAST_REQ_DATE).setValue(new Date()); // ÅIƒŠƒNƒGƒXƒg‘—M“ú
+        sheet.getRange(row, LAST_REQ_DATE).setValue(new Date()); // æœ€çµ‚ãƒªã‚¯ã‚¨ã‚¹ãƒˆé€ä¿¡æ—¥æ™‚
       }
     }
   }
 
-  //Ÿ‰ñ‚ÌÀsƒ^ƒCƒ~ƒ“ƒO(•ª)‚ğ‚ä‚ç‚¬‚ğ—^‚¦‚ÄXV i•ªƒZƒ‹‚ÍD—ñŒÅ’èj
+  //æ¬¡å›ã®å®Ÿè¡Œã‚¿ã‚¤ãƒŸãƒ³ã‚°(åˆ†)ã‚’ã‚†ã‚‰ãã‚’ä¸ãˆã¦æ›´æ–° ï¼ˆåˆ†ã‚»ãƒ«ã¯Dåˆ—å›ºå®šï¼‰
   if (cron[FLUCTUATION + ABS_2_CRON_LIST ] != 0){ 
     var commaSeparatedMinList = String(sheet.getRange(row, 4 ).getValue()).split(',');
-    var minRand = Math.floor( Math.random() * 10 ) - 5;  //‚ä‚ç‚¬‚ğ—^‚¦‚é‚½‚ß‚Ì—”‚ğİ
+    var minRand = Math.floor( Math.random() * 10 ) - 5;  //ã‚†ã‚‰ãã‚’ä¸ãˆã‚‹ãŸã‚ã®ä¹±æ•°ã‚’è¨­
     var limitPattern  = "(" + LIMIT_MATCHES['minute'] + ")"; 
     var numReg   = new RegExp("^" + limitPattern + "$"); 
     var newMinList = [];
@@ -94,34 +94,34 @@ function executeIfNeeded(cron, times, sheet, row) {
   }  
 }
 
-// ’†g‚ª*‚à‚µ‚­‚Íw’è‚µ‚½”š‚ğŠÜ‚ñ‚Å‚¢‚é‚©
+// ä¸­èº«ãŒ*ã‚‚ã—ãã¯æŒ‡å®šã—ãŸæ•°å­—ã‚’å«ã‚“ã§ã„ã‚‹ã‹
 function isMatch(timingList, time) {
   return (timingList[0] === ALL || timingList.indexOf(time) !== -1);
 }
 
-// •¶š—ñ‚©‚ç”š‚ÌƒŠƒXƒg‚ğ•Ô‚· timingList‚Ìì¬
+// æ–‡å­—åˆ—ã‹ã‚‰æ•°å­—ã®ãƒªã‚¹ãƒˆã‚’è¿”ã™ timingListã®ä½œæˆ
 function getTimingList(timingStr, type) {
   var timingList = [];
-  if (timingStr === ALL) { // * ‚Ì‚Í‚»‚Ì‚Ü‚Ü”z—ñ‚É‚µ‚Ä•Ô‚·
+  if (timingStr === ALL) { // * ã®æ™‚ã¯ãã®ã¾ã¾é…åˆ—ã«ã—ã¦è¿”ã™
     timingList.push(timingStr);
     return timingList;
   }
 
   var limitPattern  = "(" + LIMIT_MATCHES[type] + ")";
-  var numReg   = new RegExp("^" + limitPattern + "$");                      // ’Pˆêw’èƒpƒ^[ƒ“ ex) 2
-  var rangeReg = new RegExp("^" + limitPattern + "-" + limitPattern + "$"); // ”ÍˆÍw’èƒpƒ^[ƒ“ ex) 1-5
-  var devReg   = new RegExp("^\\*\/" + limitPattern + "$");                 // ŠÔŠuw’èƒpƒ^[ƒ“ ex) */10
-  var commaSeparatedList = String(timingStr).split(','); // ‹¤‘¶w’èƒpƒ^[ƒ“ ex) 1,3-5
+  var numReg   = new RegExp("^" + limitPattern + "$");                      // å˜ä¸€æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ ex) 2
+  var rangeReg = new RegExp("^" + limitPattern + "-" + limitPattern + "$"); // ç¯„å›²æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ ex) 1-5
+  var devReg   = new RegExp("^\\*\/" + limitPattern + "$");                 // é–“éš”æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ ex) */10
+  var commaSeparatedList = String(timingStr).split(','); // å…±å­˜æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ ex) 1,3-5
     
   commaSeparatedList.forEach(function(value) {
-  if (match = value.match(numReg)) { // ’Pˆêw’èƒpƒ^[ƒ“‚Éƒ}ƒbƒ`‚µ‚½‚ç”z—ñ‚É’Ç‰Á
+  if (match = value.match(numReg)) { // å˜ä¸€æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ã«ãƒãƒƒãƒã—ãŸã‚‰é…åˆ—ã«è¿½åŠ 
     timingList.push(toStr(match[1]));
-  } else if ((match = value.match(rangeReg)) && toInt(match[1]) < toInt(match[2])) { // ”ÍˆÍw’èƒpƒ^[ƒ“‚Éƒ}ƒbƒ`‚µ‚½‚ç”z—ñ‚É’Ç‰Á
+  } else if ((match = value.match(rangeReg)) && toInt(match[1]) < toInt(match[2])) { // ç¯„å›²æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ã«ãƒãƒƒãƒã—ãŸã‚‰é…åˆ—ã«è¿½åŠ 
     for (var i = toInt(match[1]); i <= toInt(match[2]); i++) {
       timingList.push(toStr(i));
     }
-  } else if ((match = value.match(devReg)) && toInt(match[1]) <= MAX_NUMBERS[type]) { // ŠÔŠuw’èƒpƒ^[ƒ“‚Éƒ}ƒbƒ`‚µ‚½‚ç”z—ñ‚É’Ç‰Á
-    var start = (type == 'day' || type == 'month') ? 1 : 0; // Œ‚Æ“ú‚¾‚¯0‚ª‘¶İ‚µ‚È‚¢‚Ì‚Å1‚©‚çƒJƒEƒ“ƒg‚·‚é
+  } else if ((match = value.match(devReg)) && toInt(match[1]) <= MAX_NUMBERS[type]) { // é–“éš”æŒ‡å®šãƒ‘ã‚¿ãƒ¼ãƒ³ã«ãƒãƒƒãƒã—ãŸã‚‰é…åˆ—ã«è¿½åŠ 
+    var start = (type == 'day' || type == 'month') ? 1 : 0; // æœˆã¨æ—¥ã ã‘0ãŒå­˜åœ¨ã—ãªã„ã®ã§1ã‹ã‚‰ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
     for (var i = start; i <= MAX_NUMBERS[type] / match[1]; i++) {
       timingList.push(toStr(i * match[1]));
     }
@@ -130,17 +130,17 @@ function getTimingList(timingStr, type) {
   return timingList;
 }
 
-// if‚âfor‚Ì”»’è‚ğ³‚µ‚­s‚¤ˆ×‚É•¶š—ñ‚ğ10i”intŒ^‚É•ÏŠ·
+// ifã‚„forã®åˆ¤å®šã‚’æ­£ã—ãè¡Œã†ç‚ºã«æ–‡å­—åˆ—ã‚’10é€²æ•°intå‹ã«å¤‰æ›
 function toInt(num) {
   return parseInt(num, 10);
 }
-// ”’l‚ğ10i”intŒ^‚É‚µ‚Ä•¶š—ñ‚É•ÏŠ·BÀsƒ^ƒCƒ~ƒ“ƒOˆê’v”»’èiindexOfj‚Å•K—v
+// æ•°å€¤ã‚’10é€²æ•°intå‹ã«ã—ã¦æ–‡å­—åˆ—ã«å¤‰æ›ã€‚å®Ÿè¡Œã‚¿ã‚¤ãƒŸãƒ³ã‚°ä¸€è‡´åˆ¤å®šï¼ˆindexOfï¼‰ã§å¿…è¦
 function toStr(num) {
   return toInt(num).toFixed();
 }
 //////////////////////////////////////////////////////////
 
-//“Še“úŒ…”’²®
+//æŠ•ç¨¿æ—¥æ™‚æ¡æ•°èª¿æ•´
 var toDoubleDigits = function(num) {
   num += "";
   if (num.length === 1) {
@@ -181,37 +181,37 @@ function replaceTag(doc){
 
 
 
-///////////tweet“à—e‚Ìİ’è‚ÆÀs///////////  !!!ƒcƒC[ƒg“à—e‚ÌƒV[ƒg–¼‚ÍID‚Æ“¯ˆê‚É‚·‚é‚±‚Æ!!!
-function postTweet(id@,twitter_access_token , twitter_access_token_secret,random_repeat) {
+///////////tweetå†…å®¹ã®è¨­å®šã¨å®Ÿè¡Œ///////////  !!!ãƒ„ã‚¤ãƒ¼ãƒˆå†…å®¹ã®ã‚·ãƒ¼ãƒˆåã¯IDã¨åŒä¸€ã«ã™ã‚‹ã“ã¨!!!
+function postTweet(idã€€,twitter_access_token , twitter_access_token_secret,random_repeat) {
  
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(id);
-  if (sheet){ //ƒV[ƒg‚ª‚ ‚éê‡
+  if (sheet){ //ã‚·ãƒ¼ãƒˆãŒã‚ã‚‹å ´åˆ
     const max_row =sheet.getRange(1, 3).getValue();
-    if (random_repeat == 0 ){ //ƒ‰ƒ“ƒ_ƒ€‘I‘ğ
-      var post_num = Math.round( Math.random() * (max_row -1) ) + 1;  //“ŠeƒcƒC[ƒg‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ
+    if (random_repeat == 0 ){ //ãƒ©ãƒ³ãƒ€ãƒ é¸æŠæ™‚
+      var post_num = Math.round( Math.random() * (max_row -1) ) + 1;  //æŠ•ç¨¿ãƒ„ã‚¤ãƒ¼ãƒˆã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«é¸æŠ
       if (post_num==0){
         sheet.getRange(2,3).setValue(1);
         post_num = 1;
       }else{
-        sheet.getRange(2,3).setValue(post_num);//ÅI“Še•¶ÍNo‚ğ“]‹L
+        sheet.getRange(2,3).setValue(post_num);//æœ€çµ‚æŠ•ç¨¿æ–‡ç« Noã‚’è»¢è¨˜
       } 
-    }else{ @@@@@@@@@@@//ƒŠƒs[ƒg‘I‘ğ(1 or 2)
+    }else{ ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€//ãƒªãƒ”ãƒ¼ãƒˆé¸æŠæ™‚(1 or 2)
       var post_num = (sheet.getRange(2,3).getValue() + 1);
       if (post_num > max_row){
         
         if(random_repeat ==2 ){
-          //‚Ìİ’èî•ñ‚ğƒNƒŠƒA‚·‚éƒtƒ‰ƒO‚ğ•Ô‚·
+          //æ™‚åˆ»ã®è¨­å®šæƒ…å ±ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
           return true;
         }    
         post_num = (sheet.getRange(2,3).getValue() + 1) % max_row;
       }
-      sheet.getRange(2,3).setValue(post_num); @               //ÅI“Še•¶ÍNo‚ğ“]‹L
+      sheet.getRange(2,3).setValue(post_num); ã€€               //æœ€çµ‚æŠ•ç¨¿æ–‡ç« Noã‚’è»¢è¨˜
     }
     
     var body = sheet.getRange(6 + post_num, 3).getValue();
 
-  }else{ //ƒV[ƒg‚ª‚È‚¢ê‡
-    var body = '•ñF‚½‚¾‚¢‚Ü‚Ì' + Getnow() + '‚ğ‚¨’m‚ç‚¹‚µ‚Ü‚·B'
+  }else{ //ã‚·ãƒ¼ãƒˆãŒãªã„å ´åˆ
+    var body = 'æ™‚å ±ï¼šãŸã ã„ã¾ã®æ™‚åˆ»' + Getnow() + 'ã‚’ãŠçŸ¥ã‚‰ã›ã—ã¾ã™ã€‚'
   }  
 
   twitterPostApi(id , twitter_access_token , twitter_access_token_secret, body);
@@ -240,7 +240,7 @@ function twitterPostApi(id, twitter_access_token, twitter_access_token_secret ,b
   
 }
 
-///////////³íI—¹‚ÌPOSTŒ‹‰Ê‚ÌóM///////////
+///////////æ­£å¸¸çµ‚äº†æ™‚ã®POSTçµæœã®å—ä¿¡///////////
 function doPost(e) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('TOP');
   var jsonString = e.postData.getDataAsString();
@@ -259,7 +259,7 @@ function doPost(e) {
       sheet.getRange(j + TITTLE_ROW ,TWITTER_ACCESS_TOKEN_SECRET).setValue(data.access_oauth_token_secret); 
     }
     else{
-      sheet.getRange(j + TITTLE_ROW ,LAST_FEEDBACK_DATA).setValue(new Date()); // Twittter“ŠeŠ®—¹ƒtƒB[ƒhƒoƒbƒNóM“ú
+      sheet.getRange(j + TITTLE_ROW ,LAST_FEEDBACK_DATA).setValue(new Date()); // TwittteræŠ•ç¨¿å®Œäº†ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯å—ä¿¡æ—¥æ™‚
     }
   }
 }
